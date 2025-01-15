@@ -1,7 +1,7 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Postagem } from "../entities/postagem.entity";
-import { Repository } from "typeorm";
+import { DeleteResult, ILike, Repository } from "typeorm";
 
 @Injectable() // Injeção de dependência, cria uma vez e aí só importar o que precisa
 export class PostagemService{
@@ -13,6 +13,43 @@ export class PostagemService{
 
     async findAll(): Promise<Postagem[]>{
         return this.postagemRepository.find(); // SELECT*FROM tb_postagens;
+    }
+
+    async findById(id:number):Promise<Postagem>{
+        const postagem=await this.postagemRepository.findOne({
+            where:{
+                id
+            }
+        })
+
+        if(!postagem)
+            throw new HttpException("Postagem não encontrada!", HttpStatus.NOT_FOUND)
+        return postagem;
+    }
+
+    async findByTitulo(titulo:string): Promise<Postagem[]>{
+        return this.postagemRepository.find({
+            where:{
+                titulo:ILike(`%${titulo}%`) //ILike - Insensitive Like - Vai ignorar a definição do Banco de dados sensitive ou insensitive
+            }
+        })
+    }
+
+    async create(postagem:Postagem): Promise<Postagem>{
+        return await this.postagemRepository.save(postagem); //= INSERT INTO tb_postagens(titulo, texto) VALUES (?,?)
+    }
+
+    async update(postagem:Postagem): Promise<Postagem>{
+        await this.findById(postagem.id)
+        return await this.postagemRepository.save(postagem); 
+        //= UPDATE tb_postagens SET titulo=postagem.titulo, 
+        // texto=postagem.texto, 
+        // data=CURRENT_TIMESTAMP() WHERE id=postagem.id
+    }
+
+    async delete(id:number): Promise<DeleteResult>{
+        await this.findById(id)
+        return await this.postagemRepository.delete(id); //= DELETE tb_postagens WHERE id=?
     }
 
 }
