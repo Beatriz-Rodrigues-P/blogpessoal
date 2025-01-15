@@ -1,6 +1,7 @@
-import{Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
+import{Column, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
 import { IsNotEmpty } from "class-validator";
 import { Transform, TransformFnParams } from "class-transformer";
+import { Tema } from "../../tema/entities/tema.entity";
 
 @Entity({name: "tb_postagens"}) //Create Table tb_postagens()
 export class Postagem {
@@ -21,6 +22,9 @@ export class Postagem {
     @UpdateDateColumn() // Atualiza data e hora
     data: Date;
 
-    
+    @ManyToOne(()=>Tema,(tema)=>tema.postagem,{
+        onDelete: "CASCADE"
+    })  //(tema) 1:n (postagem)
+    tema:Tema; //FOREIGN KEY
 
 }
