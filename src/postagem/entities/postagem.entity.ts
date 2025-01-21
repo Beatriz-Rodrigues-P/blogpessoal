@@ -2,6 +2,7 @@ import{Column, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn} from
 import { IsNotEmpty } from "class-validator";
 import { Transform, TransformFnParams } from "class-transformer";
 import { Tema } from "../../tema/entities/tema.entity";
+import { Usuario } from "../../usuario/entities/usuario.entity";
 
 @Entity({name: "tb_postagens"}) //Create Table tb_postagens()
 export class Postagem {
@@ -27,4 +28,8 @@ export class Postagem {
     })  //(tema) 1:n (postagem)
     tema:Tema; //FOREIGN KEY
 
+    @ManyToOne(()=>Usuario,(usuario)=>usuario.postagem,{
+        onDelete: "CASCADE"
+    })
+    usuario:Usuario
 }

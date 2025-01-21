@@ -16,7 +16,8 @@ export class PostagemService{
     async findAll(): Promise<Postagem[]>{
         return this.postagemRepository.find({ // SELECT*FROM tb_postagens;
             relations:{
-                tema:true
+                tema:true,
+                usuario:true
             }
         });
     }
