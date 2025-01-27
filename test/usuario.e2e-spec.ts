@@ -78,7 +78,14 @@ describe('Testes dos Módulos Usuario e Auth (e2e)', () => {
     .expect(200)
   })
 
-  it("05 - Deve atualizar usuário", async()=>{
+  it("05 - Deve buscar por ID", async()=>{
+    return await request(app.getHttpServer())
+    .get(`/usuarios/${usuarioId}`)
+    .set("Authorization", `${token}`)
+    .expect(200)
+  })
+
+  it("06 - Deve atualizar usuário", async()=>{
     return await request(app.getHttpServer())
     .put("/usuarios/atualizar")
     .set("Authorization", `${token}`)
