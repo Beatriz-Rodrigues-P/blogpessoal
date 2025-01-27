@@ -12,7 +12,7 @@ export class AuthService{
         private usuarioService: UsuarioService,
         private jwtService: JwtService,
         private bcrypt: Bcrypt
-    ){ }
+    ){}
 
     async validateUser(username: string, password: string): Promise<any>{
 
